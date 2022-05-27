@@ -72,7 +72,6 @@ export default function App() {
     })
     // On success, we should set the articles in their proper state and
     .then(res => {
-       console.log(res.data)
        setArticles(res.data.articles)
     // put the server success message in its proper state.
       setMessage(res.data.message)
@@ -122,8 +121,15 @@ export default function App() {
     .then(res => {
       setMessage(res.data.message)
       setCurrentArticleId()
-      getArticles()
-      setSpinnerOn(false)
+      axios.get(articlesUrl, {
+        headers: {
+          authorization: localStorage.getItem("token")
+        }
+      })
+      .then(res => {
+        setArticles(res.data.articles)
+        setSpinnerOn(false)
+      })
     })
     .catch(err => console.log(err))
   }
@@ -138,13 +144,24 @@ export default function App() {
     })
       .then(res => {
         setMessage(res.data.message)
+        axios.get(articlesUrl, {
+          headers: {
+            authorization: localStorage.getItem("token")
+          }
+        })
+        .then(res => {
+          setArticles(res.data.articles)
+          setSpinnerOn(false)
+        })
+        
       })
+      .catch(err => console.log(err))
   }
 
   return (
     // ✨ fix the JSX: `Spinner`, `Message`, `LoginForm`, `ArticleForm` and `Articles` expect props ❗
     <>
-      <Spinner />
+      <Spinner on={spinnerOn}/>
       <Message message={message}/>
       <button id="logout" onClick={logout}>Logout from app</button>
       <div id="wrapper" style={{ opacity: spinnerOn ? "0.25" : "1" }}> {/* <-- do not change this line */}

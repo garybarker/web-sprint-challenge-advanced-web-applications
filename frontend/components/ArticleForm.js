@@ -77,7 +77,7 @@ export default function ArticleForm(props) {
       </select>
       <div className="button-group">
         <button disabled={isDisabled()} id="submitArticle">Submit</button>
-        <button onClick={Function.prototype}>Cancel edit</button>
+        {currentArticleId && <button onClick={() => setCurrentArticleId()}>Cancel edit</button>}
       </div>
     </form>
   )
