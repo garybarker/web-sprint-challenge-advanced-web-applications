@@ -119,6 +119,7 @@ export default function App() {
       }
     })
     .then(res => {
+      console.log(res)
       setMessage(res.data.message)
       setCurrentArticleId()
       axios.get(articlesUrl, {
@@ -128,8 +129,9 @@ export default function App() {
       })
       .then(res => {
         setArticles(res.data.articles)
-        setSpinnerOn(false)
+        
       })
+      setSpinnerOn(false)
     })
     .catch(err => console.log(err))
   }
@@ -151,9 +153,8 @@ export default function App() {
         })
         .then(res => {
           setArticles(res.data.articles)
-          setSpinnerOn(false)
         })
-        
+        setSpinnerOn(false)
       })
       .catch(err => console.log(err))
   }
