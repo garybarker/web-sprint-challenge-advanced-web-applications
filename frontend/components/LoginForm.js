@@ -1,22 +1,26 @@
 import React, { useState } from 'react'
 import PT from 'prop-types'
 
+
 const initialFormValues = {
   username: '',
   password: '',
 }
 export default function LoginForm(props) {
+  const {login} = props
+
   const [values, setValues] = useState(initialFormValues)
   // ✨ where are my props? Destructure them here
 
   const onChange = evt => {
     const { id, value } = evt.target
-    setValues({ ...values, [id]: value })
+    setValues({ ...values, [id]: value.trim() })
   }
 
   const onSubmit = evt => {
     evt.preventDefault()
     // ✨ implement
+    login({username: values.username, password: values.password})
   }
 
   const isDisabled = () => {
@@ -43,7 +47,7 @@ export default function LoginForm(props) {
         placeholder="Enter password"
         id="password"
       />
-      <button disabled={isDisabled()} id="submitCredentials">Submit credentials</button>
+      <button disabled={isDisabled()} id="submitCredentials" type='submit'>Submit credentials</button>
     </form>
   )
 }

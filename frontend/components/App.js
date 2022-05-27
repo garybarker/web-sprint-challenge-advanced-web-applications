@@ -5,6 +5,7 @@ import LoginForm from './LoginForm'
 import Message from './Message'
 import ArticleForm from './ArticleForm'
 import Spinner from './Spinner'
+import axiosWithAuth from '../axios'
 
 const articlesUrl = 'http://localhost:9000/api/articles'
 const loginUrl = 'http://localhost:9000/api/login'
@@ -18,24 +19,38 @@ export default function App() {
 
   // ✨ Research `useNavigate` in React Router v.6
   const navigate = useNavigate()
-  const redirectToLogin = () => { /* ✨ implement */ }
-  const redirectToArticles = () => { /* ✨ implement */ }
+  const redirectToLogin = () => navigate('/')
+  const redirectToArticles = () => navigate('/articles') 
 
   const logout = () => {
     // ✨ implement
     // If a token is in local storage it should be removed,
+    const token = localStorage.getItem('token')
+    localStorage.removeItem(token)
     // and a message saying "Goodbye!" should be set in its proper state.
+    setMessage('Goodbye!')
     // In any case, we should redirect the browser back to the login screen,
+    redirectToLogin()
     // using the helper above.
   }
 
   const login = ({ username, password }) => {
     // ✨ implement
     // We should flush the message state, turn on the spinner
+    setMessage('')
+    setSpinnerOn(true)   
     // and launch a request to the proper endpoint.
+    axiosWithAuth().post('/login', {username, password})
     // On success, we should set the token to local storage in a 'token' key,
+    .then(res => {
+      localStorage.setItem('token', res.data.token)
     // put the server success message in its proper state, and redirect
+    setMessage(res.data.message)
     // to the Articles screen. Don't forget to turn off the spinner!
+    redirectToArticles()
+    setSpinnerOn(false)
+  })
+  .catch(err => console.log(err))
   }
 
   const getArticles = () => {
@@ -78,11 +93,22 @@ export default function App() {
           <NavLink id="articlesScreen" to="/articles">Articles</NavLink>
         </nav>
         <Routes>
-          <Route path="/" element={<LoginForm />} />
+          <Route path="/" element={<LoginForm login={login}/>} />
           <Route path="articles" element={
             <>
-              <ArticleForm />
-              <Articles />
+              <ArticleForm 
+              updateArticle={updateArticle} 
+              postArticle={postArticle} 
+              setCurrentArticleId={setCurrentArticleId} 
+              currentArticleId={currentArticleId}
+              />
+              <Articles 
+              deleteArticle={deleteArticle}
+              setCurrentArticleId={setCurrentArticleId}
+              articles={articles}
+              currentArticleId={currentArticleId}
+              getArticles={getArticles}
+               />
             </>
           } />
         </Routes>
