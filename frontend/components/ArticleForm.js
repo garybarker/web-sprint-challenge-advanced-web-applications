@@ -33,7 +33,7 @@ export default function ArticleForm(props) {
     evt.preventDefault()
     // ✨ implement
     currentArticleId ?
-    updateArticle({ article: values }) 
+    updateArticle({article_id: currentArticleId,  article: values }) 
     : postArticle(values)
     setValues(initialFormValues);
     // We must submit a new post or update an existing one,
@@ -43,13 +43,18 @@ export default function ArticleForm(props) {
   const isDisabled = () => {
     // ✨ implement
     // Make sure the inputs have some values
+   if(values.title && values.text && values.topic) {
+     return false
+   }else{
+     return true
+   }
   }
 
   return (
     // ✨ fix the JSX: make the heading display either "Edit" or "Create"
     // and replace Function.prototype with the correct function
     <form id="form" onSubmit={onSubmit}>
-      <h2>Create Article</h2>
+      <h2>{currentArticleId ? "Edit" : "Create"} Article</h2>
       <input
         maxLength={50}
         onChange={onChange}

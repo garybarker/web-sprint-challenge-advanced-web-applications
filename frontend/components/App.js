@@ -113,10 +113,32 @@ export default function App() {
   const updateArticle = ({ article_id, article }) => {
     // ✨ implemen
     // You got this!
+    setSpinnerOn(true)
+    axios.put(`${articlesUrl}/${article_id}`, article, {
+      headers: {
+        authorization: localStorage.getItem("token")
+      }
+    })
+    .then(res => {
+      setMessage(res.data.message)
+      setCurrentArticleId()
+      getArticles()
+      setSpinnerOn(false)
+    })
+    .catch(err => console.log(err))
   }
 
   const deleteArticle = article_id => {
     // ✨ implement
+    setSpinnerOn(true)
+    axios.delete(`${articlesUrl}/${article_id}`, {
+      headers: {
+        authorization: localStorage.getItem("token")
+      }
+    })
+      .then(res => {
+        setMessage(res.data.message)
+      })
   }
 
   return (
